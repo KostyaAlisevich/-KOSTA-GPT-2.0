@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOSTA GPT</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background: #020617;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #1e293b;
+}
+
+#download {
+    text-align: center;
+    padding: 10px;
+    background: #020617;
+}
+
+#download a {
+    text-decoration: none;
+    background: #22c55e;
+    color: #000;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+#chat {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.message {
+    max-width: 80%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    line-height: 1.4;
+    font-size: 15px;
+}
+
+.user {
+    background: #2563eb;
+    margin-left: auto;
+    text-align: right;
+}
+
+.bot {
+    background: #1e293b;
+    margin-right: auto;
+}
+
+#input-area {
+    display: flex;
+    padding: 10px;
+    background: #020617;
+    border-top: 1px solid #1e293b;
+}
+
+#input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: #22c55e;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>KOSTA GPT</header>
+
+<div id="download">
+    <a href="https://www.webintoapp.com/store/1043610" target="_blank">
+        ⬇ Скачать KOSTA GPT
+    </a>
+</div>
+
+<div id="chat"></div>
+
+<div id="input-area">
+    <input id="input" placeholder="Напишите сообщение..." />
+    <button onclick="send()">▶</button>
+</div>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+function addMessage(text, cls) {
+    const div = document.createElement("div");
+    div.className = "message " + cls;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function send() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    saveHistory(text, "user");
+    input.value = "";
+
+    setTimeout(() => {
+        const reply = "🤖 KOSTA GPT: Я получил ваше сообщение!";
+        addMessage(reply, "bot");
+        saveHistory(reply, "bot");
+    }, 600);
+}
+
+function saveHistory(text, role) {
+    const history = JSON.parse(localStorage.getItem("kosta_chat") || "[]");
+    history.push({ text, role });
+    localStorage.setItem("kosta_chat", JSON.stringify(history));
+}
+
+function loadHistory() {
+    const history = JSON.parse(localStorage.getItem("kosta_chat") || "[]");
+    history.forEach(msg => addMessage(msg.text, msg.role));
+}
+
+loadHistory();
+
+input.addEventListener("keydown", e => {
+    if (e.key === "Enter") send();
+});
+</script>
+
+</body>
+</html>
